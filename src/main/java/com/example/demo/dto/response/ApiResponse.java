@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T>
 {
-    int code;
+    Integer code;
     String message;
     T result;
 }

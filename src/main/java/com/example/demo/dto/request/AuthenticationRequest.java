@@ -1,20 +1,16 @@
-package com.example.demo.dto.response;
+package com.example.demo.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Builder
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse
+public class AuthenticationRequest
 {
-    long id;
-
     String username;
 
-    String firstName;
-
-    String lastName;
+    String password;
 }

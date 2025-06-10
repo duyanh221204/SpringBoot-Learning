@@ -52,7 +52,10 @@ public class UserController
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<UserResponse> updateUserById(@PathVariable Long id, UserUpdateRequest request)
+    public ApiResponse<UserResponse> updateUserById(
+            @PathVariable Long id,
+            @RequestBody @Valid UserUpdateRequest request
+    )
     {
         return ApiResponse.<UserResponse>builder()
                 .code(200)

@@ -3,18 +3,12 @@ package com.example.demo.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Builder
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse
+public class AuthenticationResponse
 {
-    long id;
-
-    String username;
-
-    String firstName;
-
-    String lastName;
+    String token;
 }
