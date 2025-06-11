@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.configuration.Jwt;
+import com.example.demo.configuration.JwtConfig;
 import com.example.demo.dto.request.AuthenticationRequest;
 import com.example.demo.dto.response.AuthenticationResponse;
 import com.example.demo.entity.UserEntity;
@@ -20,7 +20,7 @@ public class AuthenticationService
 {
     UserRepository userRepository;
     PasswordEncoder passwordEncoder;
-    Jwt jwt;
+    JwtConfig jwtConfig;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request)
     {
@@ -31,7 +31,7 @@ public class AuthenticationService
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
         return AuthenticationResponse.builder()
-                .token(jwt.generateToken(user))
+                .token(jwtConfig.generateToken(user))
                 .build();
     }
 }

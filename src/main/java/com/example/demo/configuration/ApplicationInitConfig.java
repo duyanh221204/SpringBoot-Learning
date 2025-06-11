@@ -25,6 +25,7 @@ public class ApplicationInitConfig
 {
     UserRepository userRepository;
     RoleRepository roleRepository;
+    PasswordEncoder passwordEncoder;
 
     @NonFinal
     @Value("${admin_username}")
@@ -35,7 +36,7 @@ public class ApplicationInitConfig
     String adminPassword;
 
     @Bean
-    public ApplicationRunner applicationRunner(PasswordEncoder passwordEncoder)
+    public ApplicationRunner applicationRunner()
     {
         return args ->
         {

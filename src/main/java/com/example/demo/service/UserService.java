@@ -3,10 +3,13 @@ package com.example.demo.service;
 import com.example.demo.dto.request.UserCreateRequest;
 import com.example.demo.dto.request.UserUpdateRequest;
 import com.example.demo.dto.response.UserResponse;
+import com.example.demo.entity.RoleEntity;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.enums.ErrorCode;
+import com.example.demo.enums.Role;
 import com.example.demo.exception.AppException;
 import com.example.demo.mapper.UserMapper;
+import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +17,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +29,7 @@ public class UserService
     UserRepository userRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
+    RoleRepository roleRepository;
 
     public UserResponse createUser(UserCreateRequest request)
     {
@@ -32,8 +38,13 @@ public class UserService
 
         UserEntity user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        userRepository.save(user);
 
+        Set<RoleEntity> userRole = new HashSet<>();
+        RoleEntity role = roleRepository.findByName(Role.USER.name());
+        userRole.add(role);
+
+        user.setRoles(userRole);
+        userRepository.save(user);
         return userMapper.toResponse(user);
     }
 
