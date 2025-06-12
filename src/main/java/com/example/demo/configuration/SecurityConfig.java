@@ -23,7 +23,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SecurityConfig
 {
-    JwtConfig jwtConfig;
+    CustomJwtDecoder customJwtDecoder;
 
     String[] PUBLIC_ENDPOINT_GET = {"/api/users/**"};
     String[] PUBLIC_ENDPOINT_POST = {"/api/users/**", "/api/auth/**"};
@@ -44,7 +44,13 @@ public class SecurityConfig
                                 .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 ->
-                        oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtConfig.jwtDecoder()))
+                        oauth2
+                                .jwt(jwtConfigurer ->
+                                        jwtConfigurer
+                                                .decoder(customJwtDecoder)
+                                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                                )
+                                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 );
 
         return httpSecurity.build();
