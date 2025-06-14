@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.AuthenticationRequest;
 import com.example.demo.dto.request.LogoutRequest;
+import com.example.demo.dto.request.RefreshRequest;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.AuthenticationResponse;
 import com.example.demo.service.AuthenticationService;
@@ -42,6 +43,17 @@ public class AuthenticationController
         return ApiResponse.<Void>builder()
                 .code(200)
                 .message("Successfully logout")
+                .build();
+    }
+
+    @PostMapping("/refresh")
+    public ApiResponse<AuthenticationResponse> refreshToken(@RequestBody RefreshRequest request)
+            throws JOSEException, ParseException
+    {
+        return ApiResponse.<AuthenticationResponse>builder()
+                .code(200)
+                .message("Successfully refresh token")
+                .result(authenticationService.refreshToken(request))
                 .build();
     }
 }

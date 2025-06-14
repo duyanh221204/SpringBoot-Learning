@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.configuration.JwtConfig;
 import com.example.demo.dto.request.AuthenticationRequest;
 import com.example.demo.dto.request.LogoutRequest;
+import com.example.demo.dto.request.RefreshRequest;
 import com.example.demo.dto.response.AuthenticationResponse;
 import com.example.demo.entity.InvalidatedTokenEntity;
 import com.example.demo.entity.UserEntity;
@@ -57,5 +58,28 @@ public class AuthenticationService
                 .build();
 
         invalidatedTokenRepository.save(invalidatedTokenEntity);
+    }
+    
+    public AuthenticationResponse refreshToken(RefreshRequest request) throws JOSEException, ParseException
+    {
+        SignedJWT signedJWT = jwtConfig.verifyToken(request.getToken());
+
+        String jti = signedJWT.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        Long userId = Long.parseLong(signedJWT.getJWTClaimsSet().getSubject());
+
+        InvalidatedTokenEntity invalidatedTokenEntity = InvalidatedTokenEntity.builder()
+                .id(jti)
+                .expiryTime(expiryTime)
+                .build();
+
+        invalidatedTokenRepository.save(invalidatedTokenEntity);
+
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+        return AuthenticationResponse.builder()
+                .token(jwtConfig.generateToken(user))
+                .build();
     }
 }
